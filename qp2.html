@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title></title>
+		<script type="text/javascript" src="js/public.js" ></script>
+		<!--<script>-->
+			<!--(function () {-->
+
+				<!--document.addEventListener('DOMContentLoaded', function () {-->
+
+					<!--var deviceWidth = document.documentElement.clientWidth;-->
+
+					<!--document.documentElement.style.fontSize = deviceWidth / 6.4 + 'px';-->
+
+				<!--}, false);-->
+
+				<!--window.onresize = function(){-->
+
+					<!--var deviceWidth = document.documentElement.clientWidth;-->
+
+					<!--document.documentElement.style.fontSize = deviceWidth / 6.4 + 'px';-->
+
+				<!--};-->
+
+			<!--})();-->
+		<!--</script>-->
+		<link rel="stylesheet" href="css/pay1.css" />
+		<style>
+			.modal {
+			    position: fixed;
+			    left: 0;
+			    right: 0;
+			    top: 0;
+			    bottom: 0;
+			    /*background: rgba(0,0,0, .7);*/
+			    z-index: 999;
+			    font-size: 0.26rem;
+			    color: #ccc;
+			    text-align: center;
+			    display: none;
+			}
+			.modal-dialog {
+			    width: 5rem;
+			    margin: 2rem auto;
+			}
+			.modal-content {
+			    background: #222;
+			    border:none;
+			    border-radius: 0.2rem;
+			    padding: 0.22rem 0.18rem;
+			    position: relative;
+			}
+			
+		</style>
+	</head>
+	<body>
+	   <div class="container">
+	   	  <header class="head"></header>
+	   	  <section class="sec">
+			  <form action="http://192.168.0.112:8080/CMS/mobile/pay/payTrading" name="form1"  method="post">
+	   	  	<ul>
+	   	  		<li>
+					<span>银行卡号</span>
+	   	  			<input id="carId" class="cs" type="text" placeholder="请输入银行卡号" name="carId" />
+	   	  		</li>
+	   	  		<li>
+					<span>持卡人</span>
+					<input id="openName" class="pay" type="text" name="openName" placeholder="请输入持卡人姓名"/>
+	   	  		</li>
+	   	  		<li>
+					<span>CVN2</span>
+					<input id="cvv2"  name="cvv2" class="pay" type="text" name="openName" placeholder="请输入CVN2卡背面签名栏后三位"/>
+	   	  		</li>
+	   	  		<li>
+					<span>有效期</span>
+					<input type="text" id="validthru"  class="pay" name="validthru"  placeholder="格式为月/年，如：0521"/>
+				</li>
+	   	  		<li>
+					<span>证件类型</span>
+	   	  			<select name="voucher" id="sf">
+						<option value="00">请选择证件类型</option>
+	   	  				<option value="01">身份证</option>
+	   	  			</select>
+	   	  		</li>
+	   	  		<li>
+					<span>证件号</span>
+					<input type="text"id="voucherId" class="pay" name="voucherId" placeholder="请输入证件号"/>
+	   	  		</li>
+	   	  		<li>
+					<span>手机号</span>
+					<input type="text" id="phone" class="pay" name="phone" placeholder="请输入银行预留手机号"/>
+	   	  		</li>
+	   	  	</ul>
+	   	  </section>
+	   	   
+	   	  <section class="agree">
+			  <input type="hidden" name="orderNo" value="${orderNo}"/>
+	   	  	<input class="btn" type="submit" value="立即支付" id="bt-submit" onclick="sub();" />
+	   	  </section>
+		   </form>
+	   	  <div class="modal">
+            <div class="modal-dialog">
+            <div class="modal-content">
+            <form id="buy-form">
+                 <div id="error"></div>
+            </form>
+			      </div>
+			  </div>
+		  </div>
+	   	 </div>
+	   	  <script>
+			  function __firefox(){
+				  HTMLElement.prototype.__defineGetter__("runtimeStyle", __element_style);
+				  window.constructor.prototype.__defineGetter__("event", __window_event);
+				  Event.prototype.__defineGetter__("srcElement", __event_srcElement);
+			  }
+			  function __element_style(){
+				  return this.style;
+			  }
+			  function __window_event(){
+				  return __window_event_constructor();
+			  }
+			  function __event_srcElement(){
+				  return this.target;
+			  }
+			  function __window_event_constructor(){
+				  if(document.all){
+					  return window.event;
+				  }
+				  var _caller = __window_event_constructor.caller;
+				  while(_caller!=null){
+					  var _argument = _caller.arguments[0];
+					  if(_argument){
+						  var _temp = _argument.constructor;
+						  if(_temp.toString().indexOf("Event")!=-1){
+							  return _argument;
+						  }
+					  }
+					  _caller = _caller.caller;
+				  }
+				  return null;
+			  }
+			  if(window.addEventListener){
+				  __firefox();
+			  }
+			  function validate(){
+				  var carId=document.getElementById("carId");
+				  var openName=document.getElementById("openName");
+				  var cvv2=document.getElementById("cvv2");
+				  var validthru=document.getElementById("validthru");
+				  var sf=document.getElementById("sf");
+				  var voucherId=document.getElementById("voucherId");
+				  var phone=document.getElementById("phone");
+				  var regID=/(^\d{15}$)|(^\d{17}([0-9]|X)$)/;
+				  var regPhone=/^1[3578]\d{9}$/;
+				  var regDate=/^\d{4}$/;
+				  var regcard=/^\d{16,19}$/;
+				  var regcvv=/^\d{3}$/;
+				  if(carId.value==""){
+					  document.getElementsByClassName("modal")[0].style.display="block";
+					  document.getElementById("error").innerHTML="银行卡号不能为空";
+					  event.preventDefault();
+					  return false;
+				  }
+				  else if(!regcard.test(carId.value)){
+					  document.getElementsByClassName("modal")[0].style.display="block";
+					  document.getElementById("error").innerHTML="银行卡号为16-19位";
+					  event.preventDefault();
+					  return false;
+				  }
+				  if(openName.value==""){
+					  document.getElementsByClassName("modal")[0].style.display="block";
+					  document.getElementById("error").innerHTML="姓名不能为空";
+					  event.preventDefault();
+					  return false;
+				  }
+				  if(cvv2.value==""){
+					  document.getElementsByClassName("modal")[0].style.display="block";
+					  document.getElementById("error").innerHTML="安全码不能为空";
+					  event.preventDefault();
+					  return false;
+				  }else if(!regcvv.test(cvv2.value)){
+					  document.getElementsByClassName("modal")[0].style.display="block";
+					  document.getElementById("error").innerHTML="安全码必须为3位数字";
+					  event.preventDefault();
+					  return false;
+				  }
+				  if(validthru.value==""){
+					  document.getElementsByClassName("modal")[0].style.display="block";
+					  document.getElementById("error").innerHTML="有效期不能为空";
+					  event.preventDefault();
+					  return false;
+				  }else if(!regDate.test(validthru.value)){
+					  document.getElementsByClassName("modal")[0].style.display="block";
+					  document.getElementById("error").innerHTML="有效期格式不正确!";
+					  event.preventDefault();
+					  return false;
+				  }
+				  if(sf.options[0].selected){
+					  document.getElementsByClassName("modal")[0].style.display="block";
+					  document.getElementById("error").innerHTML="请选择证件类型";
+					  event.preventDefault();
+					  return false;
+				  }
+				  if(voucherId.value==""){
+					  document.getElementsByClassName("modal")[0].style.display="block";
+					  document.getElementById("error").innerHTML="证件号不能为空";
+					  event.preventDefault();
+					  return false;
+				  }else if(!regID.test(voucherId.value)){
+					  document.getElementsByClassName("modal")[0].style.display="block";
+					  document.getElementById("error").innerHTML="身份证号格式不正确!";
+					  event.preventDefault();
+					  return false;
+				  }
+				  if(phone.value==""){
+					  document.getElementsByClassName("modal")[0].style.display="block";
+					  document.getElementById("error").innerHTML="手机号不能为空";
+					  event.preventDefault();
+					  return false;
+				  }else if(!regPhone.test(phone.value)){
+					  document.getElementsByClassName("modal")[0].style.display="block";
+					  document.getElementById("error").innerHTML="手机号格式不正确";
+					  event.preventDefault();
+					  return false;
+				  }
+				  return true;
+			  }
+
+			  function sub(){
+				  var btn=document.getElementById("bt-submit");
+				  validate();
+				  setTimeout(function(){
+					  document.getElementsByClassName("modal")[0].style.display="none";
+				  },2000);
+				  if(validate()){
+					  document.form1.submit();
+					  btn.disabled=true;
+					  btn.style.background="#ccc";
+				  }
+			  }
+	   	  </script>
+	</body>
+</html>

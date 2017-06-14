@@ -1,0 +1,92 @@
+			*{
+				margin:0px;
+				padding:0px;
+			}
+			body{
+				background: #efeff4;
+			}
+			@media only screen and (min-width: 750px){
+				html {
+					font-size: 80px !important;
+				}
+				.container{
+					margin:0 auto;
+				}
+			}
+
+			.container{
+				width:6.4rem;
+			}
+			.head{
+				width:6.4rem;
+				height: 0.27rem;
+			}
+			.head1{
+				width:6.4rem;
+			}
+			.head1 p{
+				width:6rem;
+				margin:0.16rem 0.2rem;
+				line-height: 0.26rem;
+				letter-spacing: 0.02rem;
+				font-size: 0.2rem;
+				color: #888;
+			}
+			.container .sec,.container .selec{
+				font-size: 0.3rem;
+				background: #fff;
+				color: #333;
+				font-family: inherit;
+			}
+			.sec ul,.selec ul{
+				list-style: none;
+			}
+			.sec li,.selec li{
+				font-size: 0.22rem;
+				padding:0.26rem;
+				border-bottom: 1px solid #eee;
+			}
+			.sec input,.selec input{
+				margin-left: 0.8rem;
+				font-size: 0.22rem;
+				width:2rem; 
+				border:none;
+				outline: none;
+			}
+			.sec select,.selec select{
+				position: relative;
+				bottom: 0.04rem;
+				left:0.8rem;
+				width:1rem;
+				font-size: 0.22rem;
+				border: none;
+				outline: none;
+			}
+			.sec select{
+				width:2.2rem;
+			}
+			.sec .cs{
+				margin-left: 0.88rem;
+				width:3.4rem;
+			}
+			.sec .pay{
+				margin-left:1.11rem;
+				width:3.4rem;
+			}
+			
+			.agree{
+				
+				font-size: 0.22rem;
+			}
+			.agree .btn{
+				margin-top:1rem;
+				margin-left: 0.2rem;
+				background: #fa650b;
+				border: none;
+				border-radius: 0.1rem;
+				width:6rem;
+				height:0.66rem;
+				font-size: 0.24rem;
+				color: #fff;
+			}
+			
